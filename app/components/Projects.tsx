@@ -13,6 +13,7 @@ interface Project {
   description: string
   githubLink: string
   imageUrl: string
+  techs?: string[]
 }
 
 const fallbackProjects: Project[] = [
@@ -69,7 +70,7 @@ function Sparkles({ count = 8 }: { count?: number }) {
   )
 }
 
-function ProjectCard({ project, index }: { project: Project & { techs?: string[] }; index: number }) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-60px" })
 
