@@ -13,7 +13,7 @@ interface Project {
   description: string
   githubLink: string
   imageUrl: string
-  techs?: string[]
+  technologies: string[] // Changed from techs? to technologies to perfectly match type specs
 }
 
 const fallbackProjects: Project[] = [
@@ -25,7 +25,7 @@ const fallbackProjects: Project[] = [
       "Built a full-stack IoT fleet dashboard using Next.js 15, TypeScript, Socket.IO, and PostgreSQL/PostGIS for live EV tracking and telemetry ingestion.",
     githubLink: "https://github.com/Aditi1989/fleetpulse",
     imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80",
-    techs: ["Next.js 15", "TypeScript", "Socket.IO", "PostgreSQL", "PostGIS"],
+    technologies: ["Next.js 15", "TypeScript", "Socket.IO", "PostgreSQL", "PostGIS"],
   },
   {
     _id: "2",
@@ -35,7 +35,7 @@ const fallbackProjects: Project[] = [
       "Built a multimodal framework for early detection using a voice-based screening pipeline (MLP 94.87% accuracy) and a CNN-based approach for visual tremor features in handwriting (SVM 93.33% accuracy).",
     githubLink: "https://github.com/Aditi1989/Parkinson_disease_detection_voice-image",
     imageUrl: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&q=80",
-    techs: ["MLP", "CNN", "SVM", "Python", "Scikit-learn"],
+    technologies: ["MLP", "CNN", "SVM", "Python", "Scikit-learn"],
   },
   {
     _id: "3",
@@ -45,7 +45,7 @@ const fallbackProjects: Project[] = [
       "Built a full-stack NLP system for real-time sentiment classification using RoBERTa and VADER, deployed through a Flask REST API connected to a React.js dashboard.",
     githubLink: "https://github.com/Aditi1989/customer_feedback_system",
     imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80",
-    techs: ["RoBERTa", "VADER", "Flask", "React.js", "NLP"],
+    technologies: ["RoBERTa", "VADER", "Flask", "React.js", "NLP"],
   },
 ]
 
@@ -102,9 +102,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             {project.description}
           </p>
 
-          {project.techs && (
+          {project.technologies && (
             <div className="flex flex-wrap gap-1.5 mb-4">
-              {project.techs.map((t) => (
+              {project.technologies.map((t) => (
                 <span
                   key={t}
                   className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-white/[0.04] text-zinc-500 dark:text-zinc-400 border border-transparent hover:border-[#7c73ff]/30 dark:hover:border-[#8b83ff]/30 hover:shadow-[0_0_15px_var(--primary-glow)] transition-all"
@@ -137,7 +137,12 @@ export default function Projects() {
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setProjects(data)
+          // Map backend response keys to match frontend expected types safely
+          const localizedData = data.map((item: any) => ({
+            ...item,
+            technologies: item.technologies || item.techs || []
+          }))
+          setProjects(localizedData)
         }
       })
       .catch(() => {})
